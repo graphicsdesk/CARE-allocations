@@ -1,6 +1,6 @@
 #looking at total allocation received by Ivy League Schools
 
-coronacash<-read.csv("~/Downloads/data-oDYXT.csv")
+coronacash<-read.csv("~/data-oDYXT.csv")
 
 #subset Ivys from larger dataset 
 Harvard<-subset(coronacash,School=="Harvard University")
@@ -33,7 +33,9 @@ IvyData$TA_Type <- ifelse(IvyData$Total.Allocation < 0, "below", "above")  # abo
 IvyData <- IvyData[order(IvyData$Total.Allocation), ]  # sort
 IvyData$`School` <- factor(IvyData$`School`, levels = IvyData$`School`)  # convert to factor to retain sorted order in plot.
 
-# Diverging Barcharts
+
+# DIVERGING BARCHARTS: 
+
 ggplot(IvyData, aes(x=`School`, y=Total.Allocation, label=Total.Allocation)) + 
   geom_bar(stat='identity', aes(fill=TA_Type), width=.5)  +
   scale_fill_manual(name="Total Allocation", 
@@ -42,6 +44,9 @@ ggplot(IvyData, aes(x=`School`, y=Total.Allocation, label=Total.Allocation)) +
   labs(#subtitle="Normalised total allocation from 'IvyData'", 
        title= "Normalized Total Allocation across the Ivy League") + 
   coord_flip()
+
+
+#LOLLIPOP CHART: 
 
 library(ggplot2)
 theme_set(theme_bw())
@@ -61,43 +66,7 @@ ggplot(IvyData, aes(x=`School`, y=Total.Allocation, label=Total.Allocation)) +
 
 
 
-
-
-# Data Prep
-IvyData$`School` -> rownames(IvyData)  # create new column for School names
-IvyData$Total.Allocation <- round((IvyData$Total.Allocation - mean(coronacash$Total.Allocation))/sd(coronacash$Total.Allocation), 2)  # compute normalized TA
-IvyData$TA_Type <- ifelse(IvyData$Total.Allocation < 0, "below", "above")  # above / below avg flag
-IvyData <- IvyData[order(IvyData$Total.Allocation), ]  # sort
-IvyData$`School` <- factor(IvyData$`School`, levels = IvyData$`School`)  # convert to factor to retain sorted order in plot.
-
-# Diverging Barcharts
-ggplot(IvyData, aes(x=`School`, y=Total.Allocation, label=Total.Allocation)) + 
-  geom_bar(stat='identity', aes(fill=TA_Type), width=.5)  +
-  scale_fill_manual(name="Total Allocation", 
-                    labels = c("Above Average", "Below Average"), 
-                    values = c("above"="#00ba38", "below"="#f8766d")) + 
-  labs(#subtitle="Normalised total allocation from 'IvyData'", 
-    title= "Normalized Total Allocation across the Ivy League") + 
-  coord_flip()
-
-
-I
-
-
-
-
-
-
-
-
-sd(coronacash$Total.Allocation)
-
-
-
-
-
-
-
+###INCLUDING BARNARD: 
 
 library(ggplot2)
 theme_set(theme_bw())
@@ -111,7 +80,6 @@ merge5<-rbind.data.frame(merge1,merge2)
 merge6<-rbind.data.frame(merge3,merge4)
 IvyData<-rbind.data.frame(merge5,merge6)
 IvyNardData<-rbind.data.frame(IvyData,Barnard)
-
 
 
 # Data Prep
@@ -134,6 +102,27 @@ ggplot(IvyNardData, aes(x=`School`, y=Total.Allocation, label=Total.Allocation))
   ylim(-2.5, 2.5) +
   coord_flip()
 
+
+
+
+###IF WANT TO LOOK AT MEAN/STDEV IN TERMS OF ALL SCHOOLS NOT JUST IVY: 
+
+# Data Prep
+IvyData$`School` -> rownames(IvyData)  # create new column for School names
+IvyData$Total.Allocation <- round((IvyData$Total.Allocation - mean(coronacash$Total.Allocation))/sd(coronacash$Total.Allocation), 2)  # compute normalized TA
+IvyData$TA_Type <- ifelse(IvyData$Total.Allocation < 0, "below", "above")  # above / below avg flag
+IvyData <- IvyData[order(IvyData$Total.Allocation), ]  # sort
+IvyData$`School` <- factor(IvyData$`School`, levels = IvyData$`School`)  # convert to factor to retain sorted order in plot.
+
+# Diverging Barcharts
+ggplot(IvyData, aes(x=`School`, y=Total.Allocation, label=Total.Allocation)) + 
+  geom_bar(stat='identity', aes(fill=TA_Type), width=.5)  +
+  scale_fill_manual(name="Total Allocation", 
+                    labels = c("Above Average", "Below Average"), 
+                    values = c("above"="#00ba38", "below"="#f8766d")) + 
+  labs(#subtitle="Normalised total allocation from 'IvyData'", 
+    title= "Normalized Total Allocation across the Ivy League") + 
+  coord_flip()
 
 
 
